@@ -55,7 +55,7 @@ randomButton.addEventListener("click", function () {
 });
 
 function randomize() {
-    resetImage();
+    // resetImage();
     for (let i = 0; i < traits.length; i++) {
         selected_asset[i] = true;
     }
@@ -223,7 +223,7 @@ function resetImage() {
     defaultImageF();
     render_layers = [];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // reloadImages(0);
+    reloadImages(0);
     document.querySelector("#confirmed-traits").innerHTML = "";
     for (let i = 0; i < traits.length; i++) {
         selected_asset[i] = false;
