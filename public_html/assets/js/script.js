@@ -57,12 +57,13 @@ randomButton.addEventListener("click", function () {
 function randomize() {
     resetImage();
     for (let i = 0; i < traits.length; i++) {
+        selected_asset[i] = true;
+    }
+    for (let i = 0; i < traits.length; i++) {
         let randomAsset = Math.floor(Math.random() * assets[i].length);
         selectAsset(i, randomAsset);
     }
-    for (let i = 0; i < traits.length; i++) {
-        selected_asset[i] = true;
-    }
+
 }
 
 function selectType(value) {
@@ -158,7 +159,7 @@ function renderImage() {
     else {
 
         ctx.imageSmoothingEnabled = false;
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         let loaded = 0;
         for (let i = 0; i < render_layers.length; i++) {
             let img = new Image();
