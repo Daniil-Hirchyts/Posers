@@ -4,6 +4,8 @@ let selected_type = "sheep";
 let currentTrait = 0;
 let asset_name;
 let trait_name;
+let selected_asset = [];
+let currentTrait_Menu = 0;
 
 let render_layers = [];
 let canvas = document.getElementById("render-canvas");
@@ -15,6 +17,8 @@ let previewSize = preview.height;
 window.onload = function () {
     selectCharacter();
     selectType();
+    reloadImages(0);
+    defaultImageF();
     randomize();
 };
 
@@ -37,7 +41,7 @@ function selectCharacter(value = selected_type) {
     typeSelector.value = value;
     selected_type = typeSelector.value;
     selectType(typeSelector.value);
-    resetImage();
+    randomize();
     document.querySelector("#sub-title-2").innerHTML = '<h3 class="sub-title-2">Customize your ' + selected_type + '</h3>';
     if (typeSelector.value === "sheep") document.getElementById("sheep-button").style.display = "none";
     else if (typeSelector.value === "wolf") document.getElementById("sheep-button").style.display = "flex";
@@ -55,6 +59,9 @@ function randomize() {
     for (let i = 0; i < traits.length; i++) {
         let randomAsset = Math.floor(Math.random() * assets[i].length);
         selectAsset(i, randomAsset);
+    }
+    for (let i = 0; i < traits.length; i++) {
+        selected_asset[i] = true;
     }
 }
 
@@ -82,13 +89,17 @@ function selectType(value) {
             ["None.png", "Fairytale.png", "Fire.png", "Foggy.png", "Forest.png", "Illusion.png", "Magic.png", "Meadow.png", "Silent.png", "Sunrise.png", "Underwater.png"]
         ];
     }
-    reloadImages(0);
-    defaultImageF();
 }
 
 function reloadImages(value) {
-    currentTrait = value;
-    customizerHTMLsetup();
+    if (selected_asset[currentTrait] === false
+        || (value - currentTrait > 1 && selected_asset[currentTrait] === false && selected_asset[currentTrait + 1] === false)
+        || (value - currentTrait > 1 && selected_asset[currentTrait] === true && selected_asset[currentTrait + 1] === false)) {
+        document.getElementById("info-window").classList.remove("hidden");
+    } else {
+        currentTrait = value;
+        customizerHTMLsetup();
+    }
 }
 
 function customizerHTMLsetup() {
@@ -114,6 +125,7 @@ function customizerHTMLsetup() {
     document.querySelector("#customizer").innerHTML = html;
     document.querySelector("#back-button").disabled = currentTrait === 0;
     document.querySelector("#next-button").disabled = (currentTrait === traits.length - 1);
+    currentTrait_Menu = currentTrait;
 }
 
 function selectAsset(trait_id = 0, asset_id = 0, need_render = true) {
@@ -138,6 +150,7 @@ function selectAsset(trait_id = 0, asset_id = 0, need_render = true) {
         }
         document.querySelector("#confirmed-traits").innerHTML = traitHTMLArray2.join("");
     } else document.querySelector("#confirmed-traits").innerHTML += html;
+    selected_asset[trait_id] = true;
 }
 
 function renderImage() {
@@ -145,7 +158,7 @@ function renderImage() {
     else {
 
         ctx.imageSmoothingEnabled = false;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
         let loaded = 0;
         for (let i = 0; i < render_layers.length; i++) {
             let img = new Image();
@@ -211,6 +224,9 @@ function resetImage() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     reloadImages(0);
     document.querySelector("#confirmed-traits").innerHTML = "";
+    for (let i = 0; i < traits.length; i++) {
+        selected_asset[i] = false;
+    }
 }
 
 let noButton = document.getElementById("no-button");
